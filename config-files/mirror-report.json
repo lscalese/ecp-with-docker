@@ -1,0 +1,34 @@
+{
+    "Security.Services" : {
+        "%Service_Mirror" : {
+            "Enabled" : true
+        }
+    },
+    "SYS.MirrorFailOver" : {
+        "Demo" : {
+            "Config": {
+                "Name" : "Demo",
+                "SystemName" : "report",
+                "InstanceName" : "IRIS",
+                "AgentAddress" : "${MASTER_APP_NET_IP}",
+                "AgentPort" : "2188",
+                "AsyncMember" : true,
+                "AsyncMemberType" : "rw"
+            },
+            "Databases" : [{
+                 "Directory" : "/usr/irissys/mgr/myappdata/"
+            }],
+            "LocalInfo" : {
+                "VirtualAddressInterface" : "eth0",
+                "MirrorAddress": "${REPORT_MIRROR_NET_IP}"
+            },
+            "SSLInfo" : {
+                "CAFile" : "/certificates/CA_Server.cer",
+                "CertificateFile" : "/certificates/report_server.cer",
+                "PrivateKeyFile" : "/certificates/report_server.key",
+                "PrivateKeyPassword" : "",
+                "PrivateKeyType" : "2"
+            }
+        }
+    }
+}

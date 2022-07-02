@@ -1,0 +1,32 @@
+{
+    "Security.Services" : {
+        "%Service_Mirror" : {
+            "Enabled" : true
+        }
+    },
+    "SYS.MirrorMaster" : {
+        "Demo" : {
+            "Config" : {
+                "Name" : "Demo",
+                "SystemName" : "master",
+                "UseSSL" : true,
+                "ArbiterNode" : "${ARBITER_IP}|2188",
+                "VirtualAddress" : "${IRIS_VIRTUAL_IP}/24",
+                "VirtualAddressInterface" : "eth0",
+                "MirrorAddress": "${MASTER_MIRROR_NET_IP}",
+                "AgentAddress": "${MASTER_APP_NET_IP}"
+            },
+            "Databases" : [{
+                "Directory" : "/usr/irissys/mgr/myappdata/",
+                "MirrorDBName" : "MYAPPDATA"
+            }],
+            "SSLInfo" : {
+                "CAFile" : "/certificates/CA_Server.cer",
+                "CertificateFile" : "/certificates/master_server.cer",
+                "PrivateKeyFile" : "/certificates/master_server.key",
+                "PrivateKeyPassword" : "",
+                "PrivateKeyType" : "2"
+            }
+        }
+    }
+}

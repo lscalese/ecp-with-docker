@@ -1,0 +1,21 @@
+{
+    "Defaults":{
+        "DBDATADIR" : "${MGRDIR}myappdata/",
+        "DBDATANAME" : "MYAPPDATA"
+        
+    },
+    "SYS.Databases":{
+        "${DBDATADIR}" : {}
+    },
+    "Databases":{
+        "${DBDATANAME}" : {
+            "Directory" : "${DBDATADIR}"
+        }
+    },
+    "MapGlobals":{
+        "USER": [{
+            "Name" : "demo.*",
+            "Database" : "${DBDATANAME}"
+        }]
+    }
+}
