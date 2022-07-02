@@ -109,10 +109,10 @@ rm -vfr ./certificates/CA_Server.csr
 #  3. Root Certificate filename
 
 # Generate IRIS master server certificate
-GenIrisInstanceCertificate "/C=BE/ST=Wallonia/L=Namur/O=Community/OU=IT/CN=master" "./certificates/master_server" "./certificates/CA_Server"
+GenIrisInstanceCertificate "/C=BE/ST=Wallonia/L=Namur/O=Community/OU=IT/CN=master" "./certificates/app1_server" "./certificates/CA_Server"
 
 # Generate IRIS backup server certificate
-GenIrisInstanceCertificate "/C=BE/ST=Wallonia/L=Namur/O=Community/OU=IT/CN=backup" "./certificates/backup_server" "./certificates/CA_Server"
+GenIrisInstanceCertificate "/C=BE/ST=Wallonia/L=Namur/O=Community/OU=IT/CN=backup" "./certificates/app2_server" "./certificates/CA_Server"
 
 # Generate IRIS report server certificate
-GenIrisInstanceCertificate "/C=BE/ST=Wallonia/L=Namur/O=Community/OU=IT/CN=report" "./certificates/report_server" "./certificates/CA_Server"
+GenIrisInstanceCertificate "/C=BE/ST=Wallonia/L=Namur/O=Community/OU=IT/CN=report" "./certificates/data_server" "./certificates/CA_Server"

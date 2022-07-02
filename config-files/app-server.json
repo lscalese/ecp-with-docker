@@ -1,0 +1,40 @@
+{
+    "Security.Services" : {
+        "%Service_ECP" : {
+            "Enabled" : true
+        }
+    },
+    "Security.SSLConfigs": {
+        "%ECPClient": {
+            "CAFile": "${CA_ROOT}",
+            "CertificateFile": "${CA_CLIENT}",
+            "Name": "%ECPClient",
+            "PrivateKeyFile": "${CA_PRIVATE_KEY}",
+            "Type": "0"
+        }
+    },
+    "ECPServers" : {
+        "${DATASERVER_NAME}" : {
+            "Name" : "${DATASERVER_NAME}",
+            "Address" : "${DATASERVER_IP}",
+            "Port" : "${DATASERVER_PORT}",
+            "SSLConfig" : "1"
+        }
+    },
+    "Security.System": {
+        "SSLSuperServer":1
+    },
+    "Databases": {
+        "${REMOTE_DB_NAME}" : {
+            "Directory" : "/usr/irissys/mgr/${REMOTE_DB_NAME}/",
+            "Name" : "${REMOTE_DB_NAME}",
+            "Server" : "${DATASERVER_NAME}"
+        }
+    },
+    "MapGlobals":{
+        "USER": [{
+            "Name" : "demo.*",
+            "Database" : "${REMOTE_DB_NAME}"
+        }]
+    }
+}

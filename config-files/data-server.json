@@ -1,0 +1,33 @@
+{
+    "Security.Services" : {
+        "%Service_ECP" : {
+            "Enabled" : true,
+            "ClientSystems":"${CLIENT_SYSTEMS}",
+            "AutheEnabled":"1024"
+        }
+    },
+    "Security.SSLConfigs": {
+        "%ECPServer": {
+            "CAFile": "${CA_ROOT}",
+            "CertificateFile": "${CA_SERVER}",
+            "Name": "%ECPServer",
+            "PrivateKeyFile": "${CA_PRIVATE_KEY}",
+            "Type": "1",
+            "VerifyPeer": 3
+        }
+    },
+    "Security.System": {
+        "SSLECPServer":1
+    },
+    "SYS.Databases":{
+        "/usr/irissys/mgr/myappdata/" : {}
+    },
+    "Databases":{
+        "myappdata" : {
+            "Directory" : "/usr/irissys/mgr/myappdata/"
+        }
+    },
+    "config" : {
+        "MaxServerConn" : 2
+    }
+}
