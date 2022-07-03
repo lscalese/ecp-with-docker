@@ -26,8 +26,5 @@
         "myappdata" : {
             "Directory" : "/usr/irissys/mgr/myappdata/"
         }
-    },
-    "config" : {
-        "MaxServerConn" : 2
     }
 }
