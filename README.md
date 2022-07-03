@@ -1,13 +1,12 @@
-# IRIS Mirroring samples
+# IRIS ECP With Docker
 
-In this repository we can find a sample to create mirroring fully scripted without manual intervention.  
+This a repository sample to configure programatically and ECP application server and ECP data server with Docker.  
 
-We use IRIS, ZPM Package manager and docker.  
+We use [ZPM Package manager](https://openexchange.intersystems.com/package/ObjectScript-Package-Manager) and [config-api](https://openexchange.intersystems.com/package/Config-API).  
 
 
 ## Prerequisites
 
- * [Mirroring knowledge](https://docs.intersystems.com/irislatest/csp/docbook/DocBook.UI.Page.cls?KEY=GHA_mirror).  
  * WRC Access.  
 
 ## Prepare your system
@@ -21,9 +20,8 @@ Copy the `iris.key` to this repository directory.
 
 ### Create users and groups
 
-This sample use a local directory as a volume to share database file `IRIS.DAT` between containers.  
-We need to set security settings to `./backup` directory.  
-If irisowner, irisuser groups and users does not exists yet on your system, create them.  
+This sample use local files to mount in the containers.    
+To avoid `access denied` errors we need to create irisuser and irisowner users and groups.
 
 ```bash
 sudo useradd --uid 51773 --user-group irisowner
@@ -38,7 +36,6 @@ sudo chgrp irisowner ./backup
 Our [docker-compose.yml](./docker-compose.yml) uses references to `containers.intersystems.com`.  
 So you need to login to Intersystems Containers Registry to pull the used images.  
 If you don't remember your password for the docker login to ICR, open this page https://login.intersystems.com/login/SSO.UI.User.ApplicationTokens.cls and you can retrieve your docker token.  
-
 
 
 ```bash
@@ -59,13 +56,11 @@ Certficates files overview :
 
 | File | Container | Description |
 |--- |--- |--- |
-| ./certificates/CA_Server.cer | webgateway,master,backup,report | Authority server certificate|
-| ./certificates/master_server.cer | master | Certificate for IRIS master instance (used for mirror and wegateway communication encryption) |
-| ./certificates/master_server.key | master | Related private key |
-| ./certificates/backup_server.cer | backup | Certificate for IRIS backup instance (used for mirror and wegateway communication encryption) |
-| ./certificates/backup_server.key | backup | Related private key |
-| ./certificates/report_server.cer | report | Certificate for IRIS report instance (used for mirror and wegateway communication encryption) |
-| ./certificates/report_server.key | report | Related private key |
+| ./certificates/CA_Server.cer | appsrv, datasrv | Authority server certificate|
+| ./certificates/app_server.cer | appsrv1 | Certificate for IRIS application server instance |
+| ./certificates/app_server.key | appsrv1| Related private key |
+| ./certificates/data_server.cer | datasrv | Certificate for IRIS data server instance |
+| ./certificates/data_server.key | datasrv | Related private key |
 
 
 ### Build and run containers
@@ -75,59 +70,34 @@ docker-compose build --no-cache
 docker-compose up
 ```
 
-Wait each instance has the good mirror status.  It takes a while...
-You should see theses messages in docker logs :  
-
-```
-mirror-demo-master | 01/09/22-11:02:08:227 (684) 1 [Utility.Event] Becoming primary mirror server
-...
-mirror-demo-backup | 01/09/22-11:03:06:398 (801) 0 [Utility.Event] Found MASTER as primary, becoming backup
-...
-mirror-demo-report | 01/09/22-11:03:10:745 (736) 0 [Generic.Event] MirrorClient: Connected to primary: MASTER (ver 4)
-```
-
 ### Test
 
-See the mirror monitor (management portal, this is the default user and password.) : http://localhost:81/csp/sys/op/%25CSP.UI.Portal.Mirror.Monitor.zen  
-![Mirror-Monitor](./img/mirror-monitor.png)
-
-See the mirror settings : http://localhost:81/csp/sys/mgr/%25CSP.UI.Portal.Mirror.EditFailover.zen?$NAMESPACE=%25SYS  
-
-
-![Mirror-Configuration](./img/mirror-config.png)
-
-We can test by simply set a global starting by `demo.`
-
-Open a terminal session on primary server : 
+Open an IRIS terminal on the application server.
 
 ```bash
-docker exec -it mirror-demo-master irissession iris
-```
-```ObjectScript
-s ^demo.test = $zdt($h,3,1)
+docker exec -it app-server-1 iris session iris
 ```
 
-Check if the data is available on backup node : 
+Set a global mapped to the remote database.
 
-```bash
-docker exec -it mirror-demo-backup irissession iris
-```
-```ObjectScript
-W ^demo.test
+```objectscript
+Set ^demo.ecp = $zdt($h,3,1)_" Set from application server"
 ```
 
-Check if the data is available on report node : 
+Now, check if the data has been set on the data server.
+Open an IRIS terminal on the data server
 
 ```bash
-docker exec -it mirror-demo-report irissession iris
-```
-```ObjectScript
-W ^demo.test
+docker exec -it data-server iris session iris
 ```
 
+Write ^demo.ecp global entry from `MYAPPDATA` database:
+
+```objectscript
+Write ^["^^/usr/irissys/mgr/myappdata/"]demo.ecp
+```
 
 ## Access to portals
 
-Master : http://localhost:81/csp/sys/utilhome.csp  
-Failover backup member : http://localhost:82/csp/sys/utilhome.csp  
-Read-Write report async member : http://localhost:83/csp/sys/utilhome.csp  
+Application server : http://localhost:84/csp/sys/utilhome.csp  
+Data server : http://localhost:85/csp/sys/utilhome.csp  

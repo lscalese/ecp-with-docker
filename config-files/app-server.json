@@ -21,9 +21,6 @@
             "SSLConfig" : "1"
         }
     },
-    "Security.System": {
-        "SSLSuperServer":1
-    },
     "Databases": {
         "${REMOTE_DB_NAME}" : {
             "Directory" : "/usr/irissys/mgr/${REMOTE_DB_NAME}/",

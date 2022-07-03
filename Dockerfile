@@ -25,6 +25,8 @@ SHELL [ "/session.sh" ]
 
 # Install ZPM
 # Use ZPM to install config-api
+# Set the max server connexion to 2 
 RUN \
 Do $SYSTEM.OBJ.Load("/opt/demo/zpm.xml", "ck") \
-zpm "install config-api"
+zpm "install config-api" \
+Set sc = ##class(Api.Config.Services.Loader).Load( {"config" : { "MaxServerConn" : 2 } } )
