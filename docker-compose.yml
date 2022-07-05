@@ -6,17 +6,16 @@ version: '3.7'
 
 services:
   
-  datasrv:
+  ecp-demo-data-server:
     build: .
     image: ecp-demo
-    container_name: data-server
-    hostname: datasrv
+    container_name: ecp-demo-data-server
+    hostname: data-server
     networks:
       app_net:
-        ipv4_address: ${DATASRV_APP_NET}
     environment:
       # List of IP separeted by ";" of ECP client instance (application server)
-      - CLIENT_SYSTEMS=${APPSRV1_APP_NET};${APPSRV2_APP_NET}
+      - CLIENT_SYSTEMS=ecp-with-docker_ecp-demo-app-server_1;ecp-with-docker_ecp-demo-app-server_2;ecp-with-docker_ecp-demo-app-server_3
       - CA_ROOT=/certificates/CA_Server.cer
       - CA_SERVER=/certificates/data_server.cer
       - CA_PRIVATE_KEY=/certificates/data_server.key
@@ -35,21 +34,16 @@ services:
       - ./config-files/data-server.json:/opt/demo/data-server.json
       # IRIS License
       - ./iris.key:/dur/iris.key
-    extra_hosts:
-      - "appsrv1:${APPSRV1_APP_NET}"
-      - "appsrv2:${APPSRV2_APP_NET}"
     command: ["--check-caps", "false", "--key", "/dur/iris.key", "-a", "/opt/demo/init_datasrv.sh"]
 
-  appsrv1:
+  ecp-demo-app-server:
+    
     image: ecp-demo
-    container_name: app-server-1
-    hostname: appsrv1
     networks:
       app_net:
-        ipv4_address: ${APPSRV1_APP_NET}
     environment:
-      - DATASERVER_IP=${DATASRV_APP_NET}
-      - DATASERVER_NAME=DATASRV
+      - DATASERVER_IP=data-server
+      - DATASERVER_NAME=data-server
       - DATASERVER_PORT=1972
       - CA_ROOT=/certificates/CA_Server.cer
       - CA_CLIENT=/certificates/app_server.cer
@@ -57,7 +51,7 @@ services:
       - REMOTE_DB_NAME=myappdata
       - IRIS_CONFIGAPI_FILE=/opt/demo/app-server.json
     ports:
-      - "84:52773"
+      - 52773
     volumes:
       # Post start script - application server initilization.
       - ./init_appsrv.sh:/opt/demo/init_appsrv.sh
@@ -68,8 +62,6 @@ services:
       - ./config-files/app-server.json:/opt/demo/app-server.json
       # IRIS License
       - ./iris.key:/dur/iris.key
-    extra_hosts:
-      - "datasrv:${DATASRV_APP_NET}"
     command: ["--check-caps", "false", "--key", "/dur/iris.key", "-a", "/opt/demo/init_appsrv.sh"]
   
 networks:
