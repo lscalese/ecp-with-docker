@@ -15,17 +15,19 @@ services:
       app_net:
         ipv4_address: ${DATASRV_APP_NET}
     environment:
+      # List of IP separeted by ";" of ECP client instance (application server)
       - CLIENT_SYSTEMS=${APPSRV1_APP_NET};${APPSRV2_APP_NET}
       - CA_ROOT=/certificates/CA_Server.cer
       - CA_SERVER=/certificates/data_server.cer
       - CA_PRIVATE_KEY=/certificates/data_server.key
+      # Config-API file to initiliaze this instance
       - IRIS_CONFIGAPI_FILE=/opt/demo/data-server.json
     ports:
       - "85:52773"
     volumes:
       # Post start script - data server initilization.
       - ./init_datasrv.sh:/opt/demo/init_datasrv.sh
-      # Mount certificates
+      # Mount certificates (see gen-certificates.sh to generate certificates)
       - ./certificates/app_server.cer:/certificates/data_server.cer
       - ./certificates/app_server.key:/certificates/data_server.key
       - ./certificates/CA_Server.cer:/certificates/CA_Server.cer
@@ -39,7 +41,6 @@ services:
     command: ["--check-caps", "false", "--key", "/dur/iris.key", "-a", "/opt/demo/init_datasrv.sh"]
 
   appsrv1:
-    build: .
     image: ecp-demo
     container_name: app-server-1
     hostname: appsrv1

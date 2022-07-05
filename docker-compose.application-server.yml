@@ -1,0 +1,41 @@
+# Variables are defined in .env file
+# to show the resolved docker-compose file, execute 
+# docker-compose config
+
+version: '3.7'
+
+services:
+  
+  appsrv2:
+    build: .
+    image: ecp-demo
+    container_name: app-server-2
+    hostname: appsrv2
+    networks:
+      app_net:
+        ipv4_address: ${APPSRV2_APP_NET}
+    environment:
+      - DATASERVER_IP=${DATASRV_APP_NET}
+      - DATASERVER_NAME=DATASRV
+      - DATASERVER_PORT=1972
+      - CA_ROOT=/certificates/CA_Server.cer
+      - CA_CLIENT=/certificates/app_server.cer
+      - CA_PRIVATE_KEY=/certificates/app_server.key
+      - REMOTE_DB_NAME=myappdata
+      - IRIS_CONFIGAPI_FILE=/opt/demo/app-server.json
+    ports:
+      - "86:52773"
+    volumes:
+      # Post start script - application server initilization.
+      - ./init_appsrv.sh:/opt/demo/init_appsrv.sh
+      # Mount certificates
+      - ./certificates/app_server.cer:/certificates/app_server.cer
+      - ./certificates/app_server.key:/certificates/app_server.key
+      - ./certificates/CA_Server.cer:/certificates/CA_Server.cer
+      - ./config-files/app-server.json:/opt/demo/app-server.json
+      # IRIS License
+      - ./iris.key:/dur/iris.key
+    extra_hosts:
+      - "datasrv:${DATASRV_APP_NET}"
+    command: ["--check-caps", "false", "--key", "/dur/iris.key", "-a", "/opt/demo/init_appsrv.sh"]
+  
