@@ -66,7 +66,7 @@ Certficates files overview :
 
 ```
 docker-compose build --no-cache
-docker-compose up
+docker-compose up --scale ecp-demo-app-server=2
 ```
 
 ### Test
@@ -74,7 +74,7 @@ docker-compose up
 Open an IRIS terminal on the application server.
 
 ```bash
-docker exec -it app-server-1 iris session iris
+docker exec -it ecp-with-docker_ecp-demo-app-server_1 session iris
 ```
 
 Set a global mapped to the remote database.
@@ -87,7 +87,7 @@ Now, check if the data has been set on the data server.
 Open an IRIS terminal on the data server
 
 ```bash
-docker exec -it data-server iris session iris
+docker exec -it ecp-demo-data-server iris session iris
 ```
 
 Write ^demo.ecp global entry from `MYAPPDATA` database:
@@ -98,5 +98,19 @@ Write ^["^^/usr/irissys/mgr/myappdata/"]demo.ecp
 
 ## Access to portals
 
-Application server : http://localhost:84/csp/sys/utilhome.csp  
-Data server : http://localhost:85/csp/sys/utilhome.csp  
+Data server : http://localhost:81/csp/sys/utilhome.csp  
+
+To connect to the portal mangement of application server, you have to retrieve the exposed port number with docker ps -a command:
+
+```
+docker ps -a
+CONTAINER ID   IMAGE      COMMAND                  CREATED       STATUS                 PORTS                                                                                     NAMES
+2bbe4dbd95f0   ecp-demo   "/tini -- /iris-main…"   7 hours ago   Up 7 hours (healthy)   1972/tcp, 2188/tcp, 53773/tcp, 54773/tcp, 0.0.0.0:49167->52773/tcp, :::49167->52773/tcp   ecp-with-docker_ecp-demo-app-server_2
+46c844a2f1ab   ecp-demo   "/tini -- /iris-main…"   7 hours ago   Up 7 hours (healthy)   1972/tcp, 2188/tcp, 53773/tcp, 54773/tcp, 0.0.0.0:49168->52773/tcp, :::49168->52773/tcp   ecp-with-docker_ecp-demo-app-server_1
+79bff80ea342   ecp-demo   "/tini -- /iris-main…"   7 hours ago   Up 7 hours (healthy)   1972/tcp, 2188/tcp, 53773/tcp, 54773/tcp, 0.0.0.0:85->52773/tcp, :::85->52773/tcp         ecp-demo-data-server
+```
+
+In this example, ports are : 
+
+ * 49167 for ecp-with-docker_ecp-demo-app-server_2 http://localhost:49167/csp/sys/utilhome.csp
+ * 49168 for ecp-with-docker_ecp-demo-app-server_1 ttp://localhost:49168/csp/sys/utilhome.csp

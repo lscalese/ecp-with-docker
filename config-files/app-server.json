@@ -22,8 +22,8 @@
         }
     },
     "Databases": {
-        "${REMOTE_DB_NAME}" : {
-            "Directory" : "/usr/irissys/mgr/${REMOTE_DB_NAME}/",
+        "myappdata" : {
+            "Directory" : "/usr/irissys/mgr/myappdata/",
             "Name" : "${REMOTE_DB_NAME}",
             "Server" : "${DATASERVER_NAME}"
         }
@@ -31,7 +31,7 @@
     "MapGlobals":{
         "USER": [{
             "Name" : "demo.*",
-            "Database" : "${REMOTE_DB_NAME}"
+            "Database" : "myappdata"
         }]
     }
 }
