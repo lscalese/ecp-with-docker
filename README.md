@@ -113,4 +113,4 @@ CONTAINER ID   IMAGE      COMMAND                  CREATED       STATUS         
 In this example, ports are : 
 
  * 49167 for ecp-with-docker_ecp-demo-app-server_2 http://localhost:49167/csp/sys/utilhome.csp
- * 49168 for ecp-with-docker_ecp-demo-app-server_1 ttp://localhost:49168/csp/sys/utilhome.csp
+ * 49168 for ecp-with-docker_ecp-demo-app-server_1 http://localhost:49168/csp/sys/utilhome.csp
