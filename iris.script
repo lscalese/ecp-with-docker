@@ -1,0 +1,6 @@
+zn "%SYS"
+Set p("MaxServerConn")=3
+Do ##Class(Config.config).Modify(.p)
+Do ##class(Security.Users).UnExpireUserPasswords("*")
+do ##class(Security.SSLConfigs).Create("ssl") set r=##class(%Net.HttpRequest).%New(),r.Server="pm.community.intersystems.com",r.SSLConfiguration="ssl" do r.Get("/packages/zpm/latest/installer"),$system.OBJ.LoadStream(r.HttpResponse.Data,"c")
+Halt
