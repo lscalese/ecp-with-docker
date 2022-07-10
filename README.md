@@ -15,7 +15,7 @@ We use [ZPM Package manager](https://openexchange.intersystems.com/package/Objec
 
 If you don't have a valid Docker License for IRIS yet connect to [Worldwide Respnse Center (WRC)](https://wrc.interystems.com) with your credentials.  
 Click "Actions" --> "Online distribtion", then "Evaluations" button and select "Evaluation License", fill the form.  
-Copy the `iris.key` to this repository directory.  
+Copy the `iris.key` to your home directory.  
 
 
 ### Create users and groups
@@ -34,7 +34,7 @@ sudo groupmod --gid 52773 irisuser
 
 Our [docker-compose.yml](./docker-compose.yml) uses references to `containers.intersystems.com`.  
 So you need to login to Intersystems Containers Registry to pull the used images.  
-If you don't remember your password for the docker login to ICR, open this page https://login.intersystems.com/login/SSO.UI.User.ApplicationTokens.cls and you can retrieve your docker token.  
+If you don't remember your password for the docker login to ICR, logon to https://containers.intersystems.com/ with WRC account.  
 
 
 ```bash
